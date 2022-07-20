@@ -22,11 +22,81 @@
 <ul>
 <li><strong>Detection</strong>: individuiamo in un’immagine dov’è il semaforo</li><li><strong>Classification</strong>: classifichiamo qual è il colore della lente luminosa del semaforo</li></ul>
 <p>Una strategia molto semplice ma molto on-point sul lavoro che dobbiamo effettuare.</p>
-<h2 id="h2-detection"><a name="Detection" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Detection</h2><h3 id="h3-algoritmi-yolo"><a name="Algoritmi YOLO" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Algoritmi YOLO</h3><p><strong>YOLO (You Look Only Once)</strong> è una famiglia di algoritmi di object-detection in tempo reale sviluppata da <strong>Joseph Redmon</strong> e <strong>Ali Farhadi</strong> che negli ultimi tempi gode di ampio successo, sia per diffusione che per risultati.  Il loro obiettivo è di effettuare <strong>predict</strong> con una singola <strong>forward propagation</strong>. </p>
+<h2 id="h2-traffic-light-detection"><a name="Traffic Light Detection" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Traffic Light Detection</h2><h3 id="h3-algoritmi-yolo"><a name="Algoritmi YOLO" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Algoritmi YOLO</h3><p><strong>YOLO (You Look Only Once)</strong> è una famiglia di algoritmi di object-detection in tempo reale sviluppata da <strong>Joseph Redmon</strong> e <strong>Ali Farhadi</strong> che negli ultimi tempi gode di ampio successo, sia per diffusione che per risultati.  Il loro obiettivo è di effettuare <strong>predict</strong> con una singola <strong>forward propagation</strong>. </p>
 <p>Struttura YOLOv3:<br><img src="https://github.com/mariomarra99/cool-nn-light-signals/blob/main/images/yolov3_arch.png" alt=""></p>
 <p>Gli algoritmi sono stati selezionati con criterio soprattutto a fronte della loro <strong>robustezza</strong> nell’individuare piccoli e grandi oggetti senza intaccare la qualità dell’immagine finale con un’architettura relativamente semplice (<strong>Layer convoluzionali</strong>, <strong>ResNet</strong> con <strong>ReLU</strong> e <strong>Batch Normalization</strong> , <strong>FPN</strong>, <strong>softmax</strong>,  <strong>Cross entropy</strong> come funzione di <strong>loss</strong>). Non mi soffermo nel funzionamento stretto dell’architettura in quanto non nell’obiettivo del progetto, tuttavia né studeriemo i risultati.</p>
-<h4 id="h4-yolov3"><a name="YOLOv3" class="reference-link"></a><span class="header-link octicon octicon-link"></span>YOLOv3</h4><p>Con <strong>65252682</strong> parametri, <strong>YOLOv3</strong> è il primo della famiglia a sfruttare <strong>FPN</strong>, un network in grado di prendere in input immagini di qualunque scala e di darle in output in maniera robusta a qulunque scala. Questa è la forza di <strong>YOLOv3</strong>: <strong>robustezza</strong>.</p>
+<p>Noi per facilità d’uso utilizzeremo le implementazioni di <a href="https://github.com/ultralytics" title="ultralytics">ultralytics</a>, molto semplici da utilizzare in tutti i suoi aspetti.</p>
+<h4 id="h4-yolov3"><a name="YOLOv3" class="reference-link"></a><span class="header-link octicon octicon-link"></span>YOLOv3</h4><p>Con <strong>61922845</strong> parametri, <strong>YOLOv3</strong> è il primo della famiglia a sfruttare <strong>FPN</strong>, un network in grado di prendere in input immagini di qualunque scala e di darle in output in maniera robusta a qulunque scala. Questa è la forza di <strong>YOLOv3</strong>: <strong>robustezza</strong>.</p>
 <p>Per un veloce ricapitolio su cui mi sono formato rimando a <a href="http://https://towardsdatascience.com/yolo-v3-explained-ff5b850390f" title="qui">qui</a> e al <a href="https://arxiv.org/abs/1804.02767" title="paper">paper</a>.</p>
 <h4 id="h4-yolov5"><a name="YOLOv5" class="reference-link"></a><span class="header-link octicon octicon-link"></span>YOLOv5</h4><p><strong>YOLOv5</strong> è una versione sviluppata da <strong>Glenn Jocher</strong>  con la seguente architettura:</p>
-<pre class="prettyprint linenums prettyprinted" style=""><ol class="linenums"><li class="L0"><code><span class="typ">Backbone</span><span class="pun">:</span><span class="pln"> </span><span class="typ">New</span><span class="pln"> CSP</span><span class="pun">-</span><span class="typ">Darknet53</span></code></li><li class="L1"><code><span class="typ">Neck</span><span class="pun">:</span><span class="pln"> SPPF</span><span class="pun">,</span><span class="pln"> </span><span class="typ">New</span><span class="pln"> CSP</span><span class="pun">-</span><span class="pln">PAN</span></code></li><li class="L2"><code><span class="typ">Head</span><span class="pun">:</span><span class="pln"> </span><span class="typ">YOLOv3</span><span class="pln"> </span><span class="typ">Head</span></code></li></ol></pre><p>Questa struttura  inificia la robustezza, ma è caratterizzata da una maggiore <strong>precision</strong> e <strong>confidence</strong>. Noi utilizzeremo <strong>YOLOv5nano</strong> con  <strong>x</strong> parametri e <strong>YOLOv5large</strong> con <strong>x</strong> parametri. Per i dettagli rimando al prossimo paragrafo.</p>
+<pre class="prettyprint linenums prettyprinted" style=""><ol class="linenums"><li class="L0"><code><span class="typ">Backbone</span><span class="pun">:</span><span class="pln"> </span><span class="typ">New</span><span class="pln"> CSP</span><span class="pun">-</span><span class="typ">Darknet53</span></code></li><li class="L1"><code><span class="typ">Neck</span><span class="pun">:</span><span class="pln"> SPPF</span><span class="pun">,</span><span class="pln"> </span><span class="typ">New</span><span class="pln"> CSP</span><span class="pun">-</span><span class="pln">PAN</span></code></li><li class="L2"><code><span class="typ">Head</span><span class="pun">:</span><span class="pln"> </span><span class="typ">YOLOv3</span><span class="pln"> </span><span class="typ">Head</span></code></li></ol></pre><p>Questa struttura  inificia la robustezza, ma è caratterizzata da una maggiore <strong>precision</strong> e <strong>confidence</strong>. Noi visiteremo <strong>YOLOv5nano</strong> con  <strong>1867405</strong> parametri, <strong>YOLOv5medium</strong> con <strong>21172173</strong> parametri e <strong>YOLOv5x6</strong> con <strong>140730220</strong> parametri. Per i dettagli rimando al prossimo paragrafo.</p>
 <p>Per la struttura di <strong>YOLOv5</strong> non c’è ancora un paper ma rimando a <a href="http://https://github.com/ultralytics/yolov5/issues/6998" title="qui">qui</a>.</p>
+<h3 id="h3-sperimentazione"><a name="Sperimentazione" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Sperimentazione</h3><p>Effettuo le detect su un batch di <strong>400</strong> immagini presi da <strong>S2TLD</strong>. Utilizzo le implementazioni di <a href="https://github.com/ultralytics" title="ultralytics">ultralytics</a> con i <strong>pre-trained weight</strong> per facilità d’uso e accessibilità.</p>
+<ul>
+<li><strong>GPU</strong>: Tesla T4</li><li><strong>CPU</strong>: Intel(R) Xeon(R)</li></ul>
+<p>Impongo un <strong>vincolo</strong> basato anche su osservazioni empiriche : studio solo i casi con una <strong>confidence</strong> &gt; <strong>0.5</strong> . Di solito una <strong>confidence</strong> minore è direttamente proporzionale a <strong>distanze maggiori</strong>, per cui se lo montiamo su una macchina, grazie ai tempi molto brevi di calcolo delle <strong>predict</strong>, ci prendiamo il rischio. Inoltre, di fronte ad alcuni tiri di prova effettuati con <strong>confidence minore</strong>, otteniamo risultato molto meno uniformi e sensati.  </p>
+<table>
+<thead>
+<tr>
+<th>n = 400</th>
+<th>Parametri</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1-Score</th>
+<th>mAP</th>
+<th>IoU</th>
+<th>GPU</th>
+<th>CPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>YOLOv3</strong></td>
+<td>61922845</td>
+<td>0.95</td>
+<td><strong>0.43</strong></td>
+<td><strong> 0.59</strong></td>
+<td><strong>0.41</strong></td>
+<td><strong>1.04</strong></td>
+<td>25-30 secondi</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>YOLOv5n</strong></td>
+<td><strong>1867405</strong></td>
+<td><strong>0.99</strong></td>
+<td>0.20</td>
+<td>0.33</td>
+<td>0.2</td>
+<td>0.9</td>
+<td><strong>17-20 secondi</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>YOLOv5m</strong></td>
+<td>21172173</td>
+<td>0.96</td>
+<td>0.31</td>
+<td>0.47</td>
+<td>0.30</td>
+<td>1.01</td>
+<td>34-50 secondi</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>YOLOv5x6</strong></td>
+<td>140730220</td>
+<td>0.95</td>
+<td>0.3</td>
+<td>0.46</td>
+<td>0.29</td>
+<td><strong>1.05</strong></td>
+<td>40 - 50 secondi</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="h3-risultati-e-confronti"><a name="Risultati e Confronti" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Risultati e Confronti</h3><p>Notiamo come il confronto difatto è utile solo tra <strong>YOLOv3</strong> e <strong>YOLOv5n</strong> in quanto per <strong>YOLOv5m</strong> e <strong>YOLOv5x6</strong> il gioco non vale la candela. I parametri sono molti, il tempo impiegato è nettamente superiore ai primi due e le metriche non sono entusiasmanti. Inoltre evidenziamo già da adesso quanto sia difficile per questo task individuare i <strong>falsi negativi</strong>, i valori di <strong>recall</strong> sono tutti sotto lo <strong>0.5</strong>.</p>
+<p>Notiamo, come previsto, una maggiore <strong>mAP</strong> per <strong>YOLOv3</strong>. Questo è un indicatore di quanto sia <strong>robusto</strong>, in grado molto di più rispetto agli altri sia di evitare i <strong>falsi positivi</strong> e i <strong>falsi negativi</strong>. La <strong>IoU</strong> è praticamente perfetta. Tuttavia ha molti <strong>parametri</strong>, che diminuisce di molto la <strong>portabilità</strong> dell’algoritmo.</p>
+<p>Invece per <strong>YOLOv5n</strong> abbiamo un numero molto minore di <strong>parametri</strong>, che ne aumenta la <strong>portabilità</strong>, e tempi <strong>minori</strong> nell’effettuare predizioni. Ciò consente di dare più tempo alla macchina di prendere decisioni. Tuttavia ha una <strong>robustezza</strong> e una <strong>IoU</strong> minore.</p>
+<h2 id="h2-color-classification"><a name="Color Classification" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Color Classification</h2>
