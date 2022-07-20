@@ -34,6 +34,9 @@
 <h3 id="h3-sperimentazione"><a name="Sperimentazione" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Sperimentazione</h3><p>Effettuo le detect su un batch di <strong>400</strong> immagini presi da <strong>S2TLD</strong>. Utilizzo le implementazioni di <a href="https://github.com/ultralytics" title="ultralytics">ultralytics</a> con i <strong>pre-trained weight</strong> per facilità d’uso e accessibilità.</p>
 <ul>
 <li><strong>GPU</strong>: Tesla T4</li><li><strong>CPU</strong>: Intel(R) Xeon(R)</li></ul>
+<p><strong>Metriche</strong>:</p>
+<ul>
+<li><strong>Precision</strong> : indicatore di <strong>prediction</strong> senza <strong>falsi positivi</strong>.</li><li><strong>Recall</strong> : indicatore di <strong>prediction</strong> senza <strong>falsi negativi</strong>.</li><li><strong>F1-score</strong>: verifica l’<strong>accuratezza</strong>, indicatore di <strong>robustezza</strong>, stabilisce anche una sorta di correlzione tra <strong>precision</strong> e <strong>recall</strong>.</li><li><strong>mAP</strong>: indicatore principale di <strong>robustezza</strong> e <strong>accuratezza</strong> in quanto pesa molto di più la differenza tra <strong>precision</strong> e <strong>recall</strong>, quello che prenderemo più in considerazione.</li><li><strong>IoU</strong>: <strong>Intersection over Union</strong>, indicatore dell’abilità dell’algoritmo di riuscire a effettuare <strong>detect</strong> di dimensioni più o meno vicine alla realtà. Molto importante per gli algoritmi di <strong>detection</strong></li></ul>
 <p>Impongo un <strong>vincolo</strong> basato anche su osservazioni empiriche : studio solo i casi con una <strong>confidence</strong> &gt; <strong>0.5</strong> . Di solito una <strong>confidence</strong> minore è direttamente proporzionale a <strong>distanze maggiori</strong>, per cui se lo montiamo su una macchina, grazie ai tempi molto brevi di calcolo delle <strong>predict</strong>, ci prendiamo il rischio. Inoltre, di fronte ad alcuni tiri di prova effettuati con <strong>confidence minore</strong>, otteniamo risultato molto meno uniformi e sensati.  </p>
 <table>
 <thead>
@@ -57,20 +60,20 @@
 <td><strong>0.43</strong></td>
 <td><strong> 0.59</strong></td>
 <td><strong>0.41</strong></td>
-<td><strong>1.04</strong></td>
+<td><strong>&gt;1.0</strong></td>
 <td>25-30 secondi</td>
-<td></td>
+<td>10 minuti</td>
 </tr>
 <tr>
 <td><strong>YOLOv5n</strong></td>
 <td><strong>1867405</strong></td>
 <td><strong>0.99</strong></td>
-<td>0.20</td>
-<td>0.33</td>
-<td>0.2</td>
-<td>0.9</td>
+<td>0.23</td>
+<td>0.34</td>
+<td>0.25</td>
+<td>0.93</td>
 <td><strong>17-20 secondi</strong></td>
-<td></td>
+<td><strong>1 minuto</strong></td>
 </tr>
 <tr>
 <td><strong>YOLOv5m</strong></td>
@@ -79,9 +82,9 @@
 <td>0.31</td>
 <td>0.47</td>
 <td>0.30</td>
-<td>1.01</td>
+<td>~1.0</td>
 <td>34-50 secondi</td>
-<td></td>
+<td><strong>1 minuto</strong></td>
 </tr>
 <tr>
 <td><strong>YOLOv5x6</strong></td>
@@ -90,7 +93,7 @@
 <td>0.3</td>
 <td>0.46</td>
 <td>0.29</td>
-<td><strong>1.05</strong></td>
+<td><strong>&gt;1.0</strong></td>
 <td>40 - 50 secondi</td>
 <td>NaN</td>
 </tr>
@@ -98,5 +101,6 @@
 </table>
 <h3 id="h3-risultati-e-confronti"><a name="Risultati e Confronti" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Risultati e Confronti</h3><p>Notiamo come il confronto difatto è utile solo tra <strong>YOLOv3</strong> e <strong>YOLOv5n</strong> in quanto per <strong>YOLOv5m</strong> e <strong>YOLOv5x6</strong> il gioco non vale la candela. I parametri sono molti, il tempo impiegato è nettamente superiore ai primi due e le metriche non sono entusiasmanti. Inoltre evidenziamo già da adesso quanto sia difficile per questo task individuare i <strong>falsi negativi</strong>, i valori di <strong>recall</strong> sono tutti sotto lo <strong>0.5</strong>.</p>
 <p>Notiamo, come previsto, una maggiore <strong>mAP</strong> per <strong>YOLOv3</strong>. Questo è un indicatore di quanto sia <strong>robusto</strong>, in grado molto di più rispetto agli altri sia di evitare i <strong>falsi positivi</strong> e i <strong>falsi negativi</strong>. La <strong>IoU</strong> è praticamente perfetta. Tuttavia ha molti <strong>parametri</strong>, che diminuisce di molto la <strong>portabilità</strong> dell’algoritmo.</p>
-<p>Invece per <strong>YOLOv5n</strong> abbiamo un numero molto minore di <strong>parametri</strong>, che ne aumenta la <strong>portabilità</strong>, e tempi <strong>minori</strong> nell’effettuare predizioni. Ciò consente di dare più tempo alla macchina di prendere decisioni. Tuttavia ha una <strong>robustezza</strong> e una <strong>IoU</strong> minore.</p>
-<h2 id="h2-color-classification"><a name="Color Classification" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Color Classification</h2>
+<p>Invece per <strong>YOLOv5n</strong> abbiamo un numero molto minore di <strong>parametri</strong>, che ne aumenta la <strong>portabilità</strong>, e tempi <strong>minori</strong> nell’effettuare predizioni. Ciò consente di dare più tempo alla macchina di prendere decisioni. Tuttavia ha una <strong>robustezza</strong> e una <strong>IoU</strong> minore. Nota di merito è il fatto che su una <strong>CPU</strong> destinata a diventare media nei prossimi anni, impiega <strong>1 minuto</strong>. Niente. </p>
+<p>Facendo un confronto tra le <strong>inferenze</strong> effettuate con le <strong>GPU</strong> e la <strong>CPU</strong>, generalmente i tempi delle <strong>GPU</strong> sono molto minori mentre le <strong>metriche</strong> legate alla <strong>CPU</strong> sono più solide e migliori.</p>
+<h2 id="h2-color-classification"><a name="Color Classification" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Color Classifi
