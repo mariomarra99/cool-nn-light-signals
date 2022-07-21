@@ -106,6 +106,61 @@
 <p>Confronto YOLOv3 vs YOLOv5n:<br><img src="https://github.com/mariomarra99/cool-nn-light-signals/blob/main/images/y3_vs_y5n.png" alt=""></p>
 <h2 id="h2-color-classification"><a name="Color Classification" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Color Classification</h2><h3 id="h3-hsv-classifier"><a name="HSV classifier" class="reference-link"></a><span class="header-link octicon octicon-link"></span>HSV classifier</h3><p>L’approccio più legato alla <strong>Computer Vision</strong> nel senso stretto del termine.<br>Il suo funzionamento è molto semplice: prendo un semaforo, faccio uno slice dell’immagini dividendolo in tre parti, individuo attraverso una somma qual è l’immagine con una <strong>brigthness</strong> maggiore (presumibilmente quella dove è contenuta la lente più luminosa e di interesse) e la seleziono. <strong>Veloce</strong> e computazionalmente <strong>efficiente</strong>.</p>
 <p>Pur provenendo da un’intuizione personale, ho trovato un metodo molto efficace proposto proprio dalla <a href="http://https://github.com/jeremyscatigna/Traffic_light_classifier" title="stessa repository">stessa repository</a> del secondo <strong>dataset</strong>.</p>
+<p><img src="https://github.com/mariomarra99/cool-nn-light-signals/blob/main/images/feature_ext_steps.png" alt=""></p>
 <h3 id="h3-k-means-clustering"><a name="K-Means Clustering" class="reference-link"></a><span class="header-link octicon octicon-link"></span>K-Means Clustering</h3><p><strong>K-Means</strong> è un algoritmo di <strong>clustering</strong> che si pone come obiettivo di <strong>minimizzare</strong> la <strong>varianza</strong> totale intra-gruppo, ogni gruppo viene identificato mediante un <strong>centroide</strong> o punto medio e partiziona l’insieme di dati in <strong>k</strong> gruppi. </p>
 <p>Ma se il <strong>centroide</strong> ce lo abbiamo già? Possiamo trasformarlo in un algoritmo di classificazione. La scelta arbitraria dei <strong>centroidi</strong> ci dà un grado di libertà molto ampio che consente di rendere la classificazione <strong>versatile </strong> e di spaziare tra tanti colori.</p>
-<h3 id="h3-decision-tree"><a name="Decision Tree" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Decision Tree</h3><p><strong>Decision Tree</strong> è un algoritmo di <strong>machine learning supervisionato</strong> utilizzato per classificare in base a decisioni (<strong>label</strong>) a fronte di dati (<strong>input</strong>)  già inseriti. <strong>Training</strong> veloce e semplice, <strong>generalizzazione</strong> efficace. </p>
+<p>Esempio dei colori estratti da K-Means:<br><img src="https://github.com/mariomarra99/cool-nn-light-signals/blob/main/images/clustering.png" alt=""></p>
+<h3 id="h3-decision-tree"><a name="Decision Tree" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Decision Tree</h3><p><strong>Decision Tree</strong> è un algoritmo di <strong>machine learning supervisionato</strong> utilizzato per classificare in base a decisioni (<strong>label</strong>) a fronte di dati (<strong>input</strong>)  già inseriti. <strong>Training</strong> veloce e semplice.</p>
+<h3 id="h3-sperimentazioni"><a name="Sperimentazioni" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Sperimentazioni</h3><p>In quanto due metodi non sono computazionalmente molto impegnativi, non facciamo distinzione tra <strong>GPU</strong> e <strong>CPU</strong>. </p>
+<p>Invece è importante verificare che sia efficace sia su un <strong>dataset</strong> “nativo” (dove viene effettuato il <strong>training</strong> oppure su cui è testato l’algoritmo) sia su un <strong>dataset</strong> che risponde all’esigenza reale di <strong>classification</strong> dopo la detection di <strong>YOLO</strong>. Quindi:</p>
+<ul>
+<li><strong>Dataset #1</strong>: <strong>jeremyscatigna</strong> su un numero di immagini determinato da <strong>YOLO</strong>.<ul>
+<li><strong>HSV</strong> : <strong>488</strong> immagini.<br>-<strong>K-Means</strong> : <strong> 335 </strong> immagini.<br>-<strong>DT</strong> : <strong> x </strong> immagini.</li></ul>
+</li><li><strong>Dataset #2</strong>: <strong>S2TLD</strong> su <strong>306</strong> immagini.</li></ul>
+<p><strong>Metrica</strong>:</p>
+<ul>
+<li><strong>Precision</strong>: difatto l’unica metrica utile a questo scopo in quanto non ci sono <strong>true negative</strong> da classificare, indica quanti <strong>falsi positivi</strong> influiscono sull’output.</li></ul>
+<p><strong>Vincoli HSV classifier</strong>:</p>
+<ul>
+<li>Assume che il semaforo sia a tre lenti</li><li>Assume che ci sia solo una lente più luminosa</li><li>Assume che i colori siano solo tre e sempre nella stessa posizione (verde, giallo, rosso)</li></ul>
+<p><strong>Vincoli K-Means Clustering</strong>:</p>
+<ul>
+<li>Assume che ci sia solo una lente luminosa</li><li>Ricerca dei <strong>Centroidi</strong></li><li>Computazionalmente impegnativo </li></ul>
+<p><strong>Vincoli Decision Tree</strong>:</p>
+<ul>
+<li>C’è bisogno di <strong>training</strong> :  può essere sia un vantaggio che uno svantaggio. Nello scenario di ampia disponibilità di <strong>dataset</strong> è un vantaggio, sennò va fatto un lavoro annoso.</li></ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Precision Dataset #1</th>
+<th>Precision Dataset #2</th>
+<th>n. Vincoli</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HSV</strong></td>
+<td><strong>0.97</strong></td>
+<td><strong>0.92</strong></td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>K-Means</strong></td>
+<td>0.94</td>
+<td>0.91</td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>DT</strong></td>
+<td><strong>0.97</strong></td>
+<td>x</td>
+<td><strong>0 - 1</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>HSV Classifier</strong> ha vincoli molto stringenti, questo non gli consente di <strong>generalizzare</strong> ma in compenso ha una <strong>precision</strong> molto efficace. </p>
+<p><strong>K-Means Clustering</strong> invece è efficace ma necessita una ricerca <strong>ad hoc</strong> del <strong>centroide</strong> per ogni <strong>dataset</strong>. Inoltre per effettuare <strong>classificazione</strong> sul <strong>Dataset #1</strong> impiega <strong>20 minuti</strong>…</p>
+<p><strong>Decision Tree</strong> <strong>allenato</strong> ( in un <strong>1 secondo</strong>) sul <strong>training dataset</strong> di <strong>Dataset #1</strong> con un <strong>resize</strong> di <strong>32x32</strong> e una <strong>depth</strong> di <strong>3</strong> ha la <strong>precision</strong> migliore in proporzione ai <strong>vincoli</strong>. </p>
+<p><img src="https://github.com/mariomarra99/cool-nn-light-signals/blob/main/images/tree_struct.png" alt=""></p>
+<p>Sul <strong>Dataset #2</strong> non sono riuscito a effettuare <strong>prediction</strong> per problemi tecnici all’ultimo minuto. In ogni caso mi aspetto risultati soddisfacenti soprattuto a fronte di <strong>resize</strong> e della <strong>generalizzazione</strong> che offre la <strong>profondità</strong> non elevata dell’algoritmo.</p>
