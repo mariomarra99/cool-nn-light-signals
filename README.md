@@ -114,9 +114,9 @@
 <h3 id="h3-sperimentazioni"><a name="Sperimentazioni" class="reference-link"></a><span class="header-link octicon octicon-link"></span>Sperimentazioni</h3><p>In quanto due metodi non sono computazionalmente molto impegnativi, non facciamo distinzione tra <strong>GPU</strong> e <strong>CPU</strong>. </p>
 <p>Invece è importante verificare che sia efficace sia su un <strong>dataset</strong> “nativo” (dove viene effettuato il <strong>training</strong> oppure su cui è testato l’algoritmo) sia su un <strong>dataset</strong> che risponde all’esigenza reale di <strong>classification</strong> dopo la detection di <strong>YOLO</strong>. Quindi:</p>
 <ul>
-<li><strong>Dataset #1</strong>: <strong>jeremyscatigna</strong> su un numero di immagini determinato da <strong>YOLO</strong>.<ul>
-<li><strong>HSV</strong> : <strong>488</strong> immagini.<br>-<strong>K-Means</strong> : <strong> 335 </strong> immagini.<br>-<strong>DT</strong> : <strong> x </strong> immagini.</li></ul>
-</li><li><strong>Dataset #2</strong>: <strong>S2TLD</strong> su <strong>306</strong> immagini.</li></ul>
+<li><strong>Dataset #1</strong>: <strong>jeremyscatigna</strong> su <strong>306</strong> immagini.</li>
+</li><li><strong>Dataset #2</strong>: <strong>S2TLD</strong> </ul> su un numero di immagini determinato da <strong>YOLO</strong>.<ul>
+<li><strong>HSV</strong> : <strong>488</strong> immagini.<li><strong>K-Means</strong> : <strong> 335 </strong> immagini.<li><strong>DT</strong> : <strong> x </strong> immagini.</li></ul>
 <p><strong>Metrica</strong>:</p>
 <ul>
 <li><strong>Precision</strong>: difatto l’unica metrica utile a questo scopo in quanto non ci sono <strong>true negative</strong> da classificare, indica quanti <strong>falsi positivi</strong> influiscono sull’output.</li></ul>
