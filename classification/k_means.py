@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 from sklearn.cluster import KMeans
 from collections import Counter
 from skimage.color import rgb2lab, deltaE_cie76
@@ -41,12 +42,4 @@ def match_image_by_color(image, color, threshold = 60, number_of_colors = 10):
             select_image = True
     
     return select_image
-
-COLORS = {
-    'red': [255,0,0],
-    'yellow': [255, 255, 0],
-    'green' : [0,128,0],
-    'coral' : [255,127,80],
-    'light green' : [102,255,178]
-}
-images = []
+    
